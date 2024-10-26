@@ -4,7 +4,7 @@ export const mockData = [
     name: 'Wine - Red, Harrow Estates, Cab',
     description:
       'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum.',
-    price: 86,
+    price: 10,
   },
   {
     id: 2,

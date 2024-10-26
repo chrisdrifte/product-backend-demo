@@ -1,8 +1,8 @@
 import { KvClientConnection } from './KvClientConnection';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type KvClient<T = any> = {
-  connect: (options?: {
+export type KvClient<T = string> = {
+  connect: (options: {
+    url: string;
     signal?: AbortSignal;
   }) => Promise<KvClientConnection<T>>;
 };

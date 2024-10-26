@@ -49,3 +49,20 @@ Stores transformed product data and provides an API endpoint to search data
 **Index B**
 
 Stores transformed product data and provides an API endpoint to search data
+
+## System state
+
+All state is stored in `/.kv` for convenience. In real life, data would be
+distributed across different systems in the network.
+
+## Mock clients
+
+As this is a demo project, many clients are mocked.
+
+| Client   | Description                                         |
+| -------- | --------------------------------------------------- |
+| indexA   | Mocks communication with the external index service |
+| indexB   | Mocks communication with the external index service |
+| localKv  | Mocks key value storage as files in `/.kv`          |
+| memDb    | Mocks relational database storage                   |
+| wsBroker | Mocks message broker as a websocket relay server    |

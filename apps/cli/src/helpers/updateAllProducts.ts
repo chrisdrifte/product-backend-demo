@@ -55,7 +55,7 @@ export async function updateAllProducts(
 
   const db = await deps.db.connect({ signal });
 
-  const kv = await deps.kv.connect({ signal });
+  const kv = await deps.kv.connect({ url: 'CLI', signal });
 
   const broker = await deps.broker.connect({
     url: 'ws://localhost:8080',

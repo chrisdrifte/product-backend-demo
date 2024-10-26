@@ -1,31 +1,57 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 import { KvClient, KvClientConnection } from '@product-backend/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Value = any;
+const localKv: KvClient = {
+  async connect(options: { url: string }) {
+    const dir = path.join(process.cwd(), '.kv', options.url);
 
-// @todo replace with filesystem
-const storage: Map<string, Value> = new Map();
+    if (!fs.existsSync(dir)) {
+      console.log('creating', dir);
+      fs.mkdirSync(dir);
+    }
 
-const connection: KvClientConnection<Value> = {
-  async set(key: string, value: Value) {
-    storage.set(key, value);
-  },
+    const keyToFile = (key: string) => path.join(dir, key + '.txt');
 
-  async get(key: string) {
-    storage.get(key);
-  },
+    const connection: KvClientConnection = {
+      async set(key: string, value: string) {
+        fs.writeFileSync(keyToFile(key), value);
+      },
 
-  async delete(key: string) {
-    storage.delete(key);
-  },
+      async get(key: string) {
+        const file = keyToFile(key);
 
-  async destroy() {
-    storage.clear();
-  },
-};
+        if (!fs.existsSync(file)) {
+          return;
+        }
 
-const localKv: KvClient<Value> = {
-  async connect() {
+        return fs.readFileSync(file).toString() || undefined;
+      },
+
+      async delete(key: string) {
+        const file = keyToFile(key);
+
+        if (!fs.existsSync(file)) {
+          return;
+        }
+
+        fs.unlinkSync(file);
+      },
+
+      async destroy() {
+        fs.readdir(dir, (err, files) => {
+          if (err) throw err;
+
+          for (const file of files) {
+            fs.unlink(path.join(dir, file), (err) => {
+              if (err) throw err;
+            });
+          }
+        });
+      },
+    };
+
     return connection;
   },
 };

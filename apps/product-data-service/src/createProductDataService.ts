@@ -7,7 +7,9 @@ export async function createProductDataService(deps: {
   kv: KvClient;
   broker: BrokerClient;
 }) {
-  const kv = await deps.kv.connect();
+  const kv = await deps.kv.connect({
+    url: 'PDS',
+  });
 
   const broker = await deps.broker.connect({
     url: 'ws://localhost:8080',
@@ -18,7 +20,10 @@ export async function createProductDataService(deps: {
 
     const productKey = `PRODUCT_${payload.productData.id}`;
 
-    const existingProductData = await kv.get(productKey);
+    const storedProductData = await kv.get(productKey);
+
+    const existingProductData =
+      storedProductData && JSON.parse(storedProductData);
 
     if (!existingProductData && isPartialProductData(payload.productData)) {
       return;
@@ -29,7 +34,7 @@ export async function createProductDataService(deps: {
       payload.productData
     );
 
-    await kv.set(productKey, fullProductData);
+    await kv.set(productKey, JSON.stringify(fullProductData));
 
     broker.emit({
       action: EventAction.Index,
