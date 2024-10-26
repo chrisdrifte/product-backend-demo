@@ -14,12 +14,21 @@ import { getProductIds } from '../queries/getProductIds';
 type ProductId = ProductData['id'];
 
 export async function updateAllProducts(
+  /**
+   * Used to restore and persist the product id queue
+   */
   queueKey: string,
+  /**
+   * Inject the logic for fetching the data and emitting the update event
+   */
   processProductId: (
     db: DbClientConnection,
     broker: BrokerClientConnection,
     productId: ProductId
   ) => Promise<void>,
+  /**
+   * Inject external services
+   */
   deps: {
     /**
      * The database that contains the relational product data
