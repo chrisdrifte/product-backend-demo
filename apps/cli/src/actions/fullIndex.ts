@@ -88,6 +88,8 @@ export async function fullIndex(deps: {
 
   // emit every product to the broker
   await productIdQueue.execute(async (productId) => {
+    console.log('[CLI] Process', productId);
+
     const productData = await getProductDataById(db, productId);
 
     await broker.emit({
