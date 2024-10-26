@@ -1,11 +1,11 @@
 import { ProductData } from '@product-backend/types';
-import { createLocalKv } from '@product-backend/clients/localKv';
+import { createFsKv } from '@product-backend/clients/fsKv';
 
 export async function writeProductData(productData: ProductData) {
   // mimic data storage with local kv
-  const localKv = createLocalKv();
+  const fsKv = createFsKv();
 
-  const kv = await localKv.connect({
+  const kv = await fsKv.connect({
     url: 'PDS',
   });
 

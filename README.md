@@ -65,6 +65,6 @@ As this is a demo project, many clients are mocked.
 | -------- | --------------------------------------------------- |
 | indexA   | Mocks communication with the external index service |
 | indexB   | Mocks communication with the external index service |
-| localKv  | Mocks key value storage as files in `/.kv`          |
+| fsKv     | Mocks key value storage as files in `/.kv`          |
 | memDb    | Mocks relational database storage                   |
 | wsBroker | Mocks message broker as a websocket relay server    |

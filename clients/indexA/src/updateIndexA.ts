@@ -1,5 +1,5 @@
 import { ProductData } from '@product-backend/types';
-import { createLocalKv } from '@product-backend/clients/localKv';
+import { createFsKv } from '@product-backend/clients/fsKv';
 import { productDataToIndexAData } from './productDataToIndexAData';
 
 export async function updateIndexA(productData: ProductData) {
@@ -8,8 +8,8 @@ export async function updateIndexA(productData: ProductData) {
   console.info('[Index A] Indexed', indexAData);
 
   // mimic storing in an index
-  const localKv = createLocalKv();
-  const kv = await localKv.connect({
+  const fsKv = createFsKv();
+  const kv = await fsKv.connect({
     url: 'INDEX_A',
   });
 

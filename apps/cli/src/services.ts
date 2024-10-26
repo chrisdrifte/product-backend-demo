@@ -1,9 +1,9 @@
-import { createLocalKv } from '@product-backend/clients/localKv';
+import { createFsKv } from '@product-backend/clients/fsKv';
 import { createMemDb } from '@product-backend/clients/memDb';
 import { createWsBroker } from '@product-backend/clients/wsBroker';
 
 export const services = {
   db: createMemDb(),
-  kv: createLocalKv(),
+  kv: createFsKv(),
   broker: createWsBroker(),
 };

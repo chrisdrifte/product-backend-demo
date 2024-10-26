@@ -3,7 +3,7 @@ import * as path from 'node:path';
 
 import { KvClient, KvClientConnection } from '@product-backend/types';
 
-const localKv: KvClient = {
+const fsKv: KvClient = {
   async connect(options: { url: string }) {
     const dir = path.join(process.cwd(), '.kv', options.url);
 
@@ -55,6 +55,6 @@ const localKv: KvClient = {
   },
 };
 
-export function createLocalKv() {
-  return localKv;
+export function createFsKv() {
+  return fsKv;
 }
