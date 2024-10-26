@@ -24,7 +24,7 @@ const connect = async () => {
           return Array.from(db.keys());
 
         default: {
-          const [, id] = query.split('SELECT * WHERE id = ');
+          const [, id] = query.split(' id = ');
           if (id) {
             return db.get(Number(id));
           }

@@ -5,7 +5,8 @@
   "scripts": {
     "broker": "nx serve broker",
     "services": "concurrently \"nx serve product-data-service\" \"nx serve index-a\" \"nx serve index-b\"",
-    "fullIndex": "nx buildFullIndex cli && node ./dist/apps/cli/fullIndex.run.js"
+    "fullIndex": "nx buildFullIndex cli && node ./dist/apps/cli/fullIndex.run.js",
+    "priceIndex": "nx buildPriceIndex cli && node ./dist/apps/cli/priceIndex.run.js"
   },
   "private": true,
   "dependencies": {

@@ -1,5 +1,5 @@
-import { fullIndex } from './fullIndex';
+import { priceIndex } from './priceIndex';
 import { services } from '../services';
 import { updateAllProducts } from '../helpers/updateAllProducts';
 
-updateAllProducts('FULL_INDEX_QUEUE', fullIndex, services);
+updateAllProducts('PRICE_INDEX_QUEUE', priceIndex, services);
