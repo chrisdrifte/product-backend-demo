@@ -44,8 +44,6 @@ export async function updateAllProducts(
     broker: BrokerClient<UpdateEvent>;
   }
 ) {
-  const startTime = performance.now();
-
   // maximize our chances of atomic operations by aborting all actions if we
   // encounter an error
 
@@ -110,11 +108,8 @@ export async function updateAllProducts(
   }
 
   // emit every product to the broker
-  let count = 0;
-
-  await productIdQueue.execute(async (productId) => {
+  await productIdQueue.drain(async (productId) => {
     await processProductId(db, broker, productId);
-    count++;
   });
 
   // clean up
@@ -122,18 +117,4 @@ export async function updateAllProducts(
   await kv.destroy();
   await broker.destroy();
   await productIdQueue.destroy();
-
-  const endTime = performance.now();
-  const duration = endTime - startTime;
-
-  console.info(`[CLI] Processed ${count} products in ${~~duration}ms`);
-
-  const predictCount = 300_000;
-  console.info(
-    `[CLI] ${predictCount} products would take around ${~~(
-      ((predictCount / count) * duration) /
-      1000 /
-      60
-    )}m`
-  );
 }
