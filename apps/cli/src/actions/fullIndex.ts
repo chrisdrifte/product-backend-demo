@@ -11,12 +11,18 @@ import { createQueue } from '@product-backend/queue';
 import { getProductDataById } from '../queries/getProductDataById';
 import { getProductIds } from '../queries/getProductIds';
 
-/**
- * Initiates a full index
- */
 export async function fullIndex(deps: {
+  /**
+   * The database that contains the relational product data
+   */
   db: DbClient;
+  /**
+   * A key/value store used for persisting data in case the script crashes
+   */
   kv: KvClient;
+  /**
+   * The message broker (eg. pubsub)
+   */
   broker: BrokerClient<UpdateEvent>;
 }) {
   // maximize our chances of atomic operations by aborting all actions if we
