@@ -6,6 +6,6 @@ export async function createProductDataService(deps: { broker: BrokerClient }) {
   });
 
   broker.subscribe((data) => {
-    console.info('[PDS]', data);
+    console.info('[PDS]', data.action, data.productData);
   });
 }
