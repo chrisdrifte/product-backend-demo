@@ -6,7 +6,7 @@ import {
 
 import { mockData } from './mockData';
 
-const USE_LARGE_DATASET = false;
+const USE_LARGE_DATASET = true;
 
 const connect = async () => {
   const db: Map<ProductData['id'], ProductData> = new Map(

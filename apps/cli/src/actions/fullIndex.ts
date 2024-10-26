@@ -11,8 +11,6 @@ export async function fullIndex(
   broker: BrokerClientConnection,
   productId: number
 ) {
-  console.info('[FULL_INDEX]', productId);
-
   const fullProductData = await getProductDataById(db, productId);
 
   await broker.emit({

@@ -11,8 +11,6 @@ export async function priceIndex(
   broker: BrokerClientConnection,
   productId: number
 ) {
-  console.info('[PRICE_INDEX]', productId);
-
   const partialProductData = await getProductPriceById(db, productId);
 
   await broker.emit({
