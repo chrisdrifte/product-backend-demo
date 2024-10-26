@@ -7,7 +7,8 @@ import {
 } from '@product-backend/types';
 
 import { createQueue } from '@product-backend/queue';
-import { productDataToEventPayload } from '../helpers/productDataToEventPayload';
+import { getProductDataById } from '../queries/getProductDataById';
+import { getProductIds } from '../queries/getProductIds';
 
 /**
  * Initiates a full index
@@ -76,7 +77,7 @@ export async function fullIndex(deps: {
 
   // if not, build a new queue
   if (productIdQueue.isEmpty()) {
-    const productIds: ProductId[] = await db.query('SELECT id');
+    const productIds = await getProductIds(db);
 
     for (const productId of productIds) {
       productIdQueue.push(productId);
@@ -87,15 +88,12 @@ export async function fullIndex(deps: {
 
   // emit every product to the broker
   await productIdQueue.execute(async (productId) => {
-    const productData: ProductData = await db.query(
-      `SELECT * WHERE id = ${productId}`
-    );
+    const productData = await getProductDataById(db, productId);
 
-    const payload = productDataToEventPayload(productData);
-
-    await broker.emit({ action: 'REPLACE', payload });
-
-    console.log('emitted');
+    await broker.emit({
+      action: 'REPLACE',
+      productData,
+    });
   });
 
   // clean up

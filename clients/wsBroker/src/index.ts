@@ -37,7 +37,6 @@ const wsBroker: BrokerClient<Data> = {
                   return;
                 }
 
-                console.log('Emitted for real');
                 resolve();
               })
             );
