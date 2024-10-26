@@ -1,0 +1,9 @@
+{
+  "name": "memDb",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dbs/memDb/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project memDb --web",
+  "targets": {}
+}

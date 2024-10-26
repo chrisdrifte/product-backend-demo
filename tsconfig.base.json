@@ -14,7 +14,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@product-backend/clients/localKv": ["clients/localKv/src/index.ts"],
+      "@product-backend/clients/wsBroker": ["clients/wsBroker/src/index.ts"],
+      "@product-backend/clients/memDb": ["clients/memDb/src/index.ts"],
+      "@product-backend/helpers": ["libs/helpers/src/index.ts"],
+      "@product-backend/queue": ["libs/queue/src/index.ts"],
+      "@product-backend/types": ["libs/types/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

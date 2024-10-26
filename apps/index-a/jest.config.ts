@@ -1,10 +1,10 @@
 export default {
-  displayName: 'product-backend',
+  displayName: 'index-a',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/product-backend',
+  coverageDirectory: '../../coverage/apps/index-a',
 };

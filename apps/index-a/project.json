@@ -1,7 +1,7 @@
 {
-  "name": "product-backend",
+  "name": "index-a",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/product-backend/src",
+  "sourceRoot": "apps/index-a/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/product-backend",
+        "outputPath": "dist/apps/index-a",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/product-backend/src/main.ts",
-        "tsConfig": "apps/product-backend/tsconfig.app.json",
-        "assets": ["apps/product-backend/src/assets"],
+        "main": "apps/index-a/src/main.ts",
+        "tsConfig": "apps/index-a/tsconfig.app.json",
+        "assets": ["apps/index-a/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -42,15 +42,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "product-backend:build",
+        "buildTarget": "index-a:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "product-backend:build:development"
+          "buildTarget": "index-a:build:development"
         },
         "production": {
-          "buildTarget": "product-backend:build:production"
+          "buildTarget": "index-a:build:production"
         }
       }
     }
