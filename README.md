@@ -25,11 +25,15 @@ The target system looks like this:
 
 1. Product data is held in a relational database (this is a requirement from the
    legacy system)
-2. A cli script allows us to trigger a full index
-3. Product ids are added to a queue
-4. Data is fetched for each product id, and emitted to a message broker
-5. Services which consume product data subscribe the the events and update their
-   copies of product data
+2. A cli script allows us to trigger a full or partial index
+3. The CLI script adds product ids to a persisted queue
+4. The CLI script emits an UPDATE event with full or partial product data for
+   each product id in the queue
+5. The product data service subscribes to the UPDATE event, updating its copy
+   of the product data with the new data, and an INDEX event is emitted with full
+   product data
+6. Indexer services subscribe to the INDEX event, updating their indexes with
+   the product data they care about
 
 There are three initial services:
 

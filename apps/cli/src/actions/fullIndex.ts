@@ -1,9 +1,10 @@
 import {
   BrokerClient,
   DbClient,
+  EventAction,
   KvClient,
   ProductData,
-  ReplaceProductDataEvent,
+  UpdateEvent,
 } from '@product-backend/types';
 
 import { createQueue } from '@product-backend/queue';
@@ -17,7 +18,7 @@ import { getProductIds } from '../queries/getProductIds';
 export async function fullIndex(deps: {
   db: DbClient;
   kv: KvClient;
-  broker: BrokerClient<ReplaceProductDataEvent>;
+  broker: BrokerClient<UpdateEvent>;
 }) {
   type ProductId = ProductData['id'];
 
@@ -91,7 +92,7 @@ export async function fullIndex(deps: {
     const productData = await getProductDataById(db, productId);
 
     await broker.emit({
-      action: 'REPLACE',
+      action: EventAction.Update,
       productData,
     });
   });

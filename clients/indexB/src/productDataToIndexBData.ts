@@ -5,6 +5,7 @@ export function productDataToIndexBData(
   productData: ProductData
 ): IndexBProductData {
   return {
+    id: productData.id,
     name: productData.name,
     price: productData.price,
   };

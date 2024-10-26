@@ -1,7 +1,8 @@
 import {
   BrokerClient,
   BrokerClientConnection,
-  ReplaceProductDataEvent,
+  IndexEvent,
+  UpdateEvent,
 } from '@product-backend/types';
 
 import WebSocket from 'ws';
@@ -42,10 +43,18 @@ const wsBroker: BrokerClient<Data> = {
             );
           },
 
-          async subscribe(fn: (data: ReplaceProductDataEvent) => void) {
+          async subscribe(
+            action: string,
+            fn: (event: UpdateEvent | IndexEvent) => void
+          ) {
             ws.on('message', (message) => {
-              const data = JSON.parse(message.toString());
-              fn(data.payload);
+              const parsedMessage = JSON.parse(message.toString());
+
+              if (parsedMessage.payload.action !== action) {
+                return;
+              }
+
+              fn(parsedMessage.payload);
             });
           },
 
