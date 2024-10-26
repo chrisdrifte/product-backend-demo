@@ -1,47 +1,45 @@
 import { sleep } from '@product-backend/helpers';
 
 export function createQueue<T>(options: {
-  restore: () => Promise<T[]>;
-  persist: (value: T[]) => Promise<void>;
-  abort: VoidFunction;
-  maxPerSecond?: number;
+  restore?: () => Promise<Set<T>>;
+  persist?: (value: Set<T>) => Promise<void>;
+  abort?: VoidFunction;
   retry?: number;
   retryDelay?: number;
 }) {
-  let items: T[] = [];
+  let items = new Set<T>();
 
   let isDraining = false;
 
   const { retry = 3, retryDelay = 3000 } = options;
+
   let retryCount = 0;
-  let drainAbortController: AbortController | undefined;
+  let retryAbortController: AbortController | undefined;
 
   function isEmpty() {
-    return items.length === 0;
+    return items.size === 0;
   }
 
   function push(item: T) {
-    items.push(item);
+    items.add(item);
   }
 
   async function abort() {
-    options.abort();
-    drainAbortController?.abort();
+    options.abort?.();
+    retryAbortController?.abort();
   }
 
   async function restore() {
-    items = await options.restore();
+    items = (await options.restore?.()) ?? new Set();
   }
 
   async function persist() {
-    await options.persist(items);
+    await options.persist?.(items);
   }
 
   async function drain(fn: (item: T) => Promise<void> | void) {
     const startTime = performance.now();
-
-    const totalItems = items.length;
-    const { maxPerSecond = Infinity } = options;
+    const totalItems = items.size;
 
     if (isDraining) {
       console.error(`[QUEUE] Already draining`);
@@ -50,54 +48,43 @@ export function createQueue<T>(options: {
 
     isDraining = true;
 
-    let item: T | undefined;
-
-    while (items.length) {
+    while (items.size) {
       const retryItems: T[] = [];
-      drainAbortController = new AbortController();
 
-      while ((item = items.shift())) {
+      for (const item of items) {
         try {
-          // process
           await fn(item);
-          await options.persist(items);
         } catch (err) {
-          // cancel
-          abort();
-
-          // rollback
-          await options.persist([...items, item]);
-
           // retry later
           retryItems.push(item);
           console.error(`[QUEUE] Error ${item} - ${err}`);
         }
-
-        await sleep(1000 / maxPerSecond, {
-          signal: drainAbortController.signal,
-        });
       }
 
       if (retryItems.length) {
         console.error(`[QUEUE] ${retryItems.length} items failed`);
       }
 
+      items = new Set(retryItems);
+      await options.persist?.(items);
+
       // all items processed successfully
-      if (!retryItems.length) {
+      if (!items.size) {
         break;
       }
 
       // no more retries allowed
       if (retryCount >= retry) {
-        break;
+        await abort();
+        throw new Error('[QUEUE] Failed to process all items');
       }
 
-      console.info(`[QUEUE] ${retryItems.length} to retry in ${retryDelay}ms`);
+      console.info(`[QUEUE] ${items.size} to retry in ${retryDelay}ms`);
       console.info(`[QUEUE] ${retry - retryCount} retries left`);
 
-      await sleep(retryDelay, { signal: drainAbortController.signal });
+      retryAbortController = new AbortController();
+      await sleep(retryDelay, { signal: retryAbortController.signal });
 
-      items = [...retryItems];
       retryCount++;
     }
 
@@ -120,9 +107,9 @@ export function createQueue<T>(options: {
     process.off('SIGTERM', cleanUpAndExit);
     process.off('SIGQUIT', cleanUpAndExit);
 
-    items = [];
+    items = new Set();
 
-    await options.persist(items);
+    await options.persist?.(items);
   }
 
   async function cleanUpAndExit() {

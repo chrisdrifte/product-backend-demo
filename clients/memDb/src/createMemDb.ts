@@ -6,11 +6,13 @@ import {
 
 import { mockData } from './mockData';
 
-const DATASET_SIZE = 3;
+const DATASET_SIZE = 10_000;
 
 const connect = async () => {
   const db: Map<ProductData['id'], ProductData> = new Map(
-    mockData.slice(0, DATASET_SIZE).map((data) => [data.id, data])
+    mockData.slice(0, DATASET_SIZE).map((data) => {
+      return [data.id, data];
+    })
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

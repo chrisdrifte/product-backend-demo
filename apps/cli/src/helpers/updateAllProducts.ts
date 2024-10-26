@@ -67,16 +67,16 @@ export async function updateAllProducts(
   function createProductIdQueue() {
     const restoreQueue = async () => {
       const queueValue = await kv.get(queueKey);
-      return JSON.parse(queueValue ?? '[]');
+      return new Set(JSON.parse(queueValue ?? '[]') as number[]);
     };
 
-    const persistQueue = async (productIds: ProductId[]) => {
-      if (!productIds.length) {
+    const persistQueue = async (productIds: Set<ProductId>) => {
+      if (!productIds.size) {
         await kv.delete(queueKey);
         return;
       }
 
-      const queueValue = JSON.stringify(productIds);
+      const queueValue = JSON.stringify(Array.from(productIds));
       await kv.set(queueKey, queueValue);
     };
 
@@ -103,9 +103,9 @@ export async function updateAllProducts(
     for (const productId of productIds) {
       productIdQueue.push(productId);
     }
-
-    await productIdQueue.persist();
   }
+
+  await productIdQueue.persist();
 
   // emit every product to the broker
   await productIdQueue.drain(async (productId) => {
