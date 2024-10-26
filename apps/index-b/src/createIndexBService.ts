@@ -1,4 +1,5 @@
 import { BrokerClient } from '@product-backend/types';
+import { updateIndexB } from '@product-backend/clients/indexB';
 
 const BROKER_URL = 'ws://localhost:8080';
 
@@ -7,7 +8,7 @@ export async function createIndexBService(deps: { broker: BrokerClient }) {
     url: BROKER_URL,
   });
 
-  broker.subscribe((data) => {
-    console.info('[Index B]', data);
+  broker.subscribe((payload) => {
+    updateIndexB(payload.productData);
   });
 }
