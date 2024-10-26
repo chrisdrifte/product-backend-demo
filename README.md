@@ -16,7 +16,8 @@ npm run services
 ```
 
 ```shell
-npm run fullIndex
+npm run fullIndex # updates all data for all products
+npm run priceIndex # updates price data for all products
 ```
 
 ## Architecture
