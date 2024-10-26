@@ -14,14 +14,11 @@ import { getProductIds } from '../queries/getProductIds';
 /**
  * Initiates a full index
  */
-
 export async function fullIndex(deps: {
   db: DbClient;
   kv: KvClient;
   broker: BrokerClient<UpdateEvent>;
 }) {
-  type ProductId = ProductData['id'];
-
   // maximize our chances of atomic operations by aborting all actions if we
   // encounter an error
 
@@ -43,6 +40,8 @@ export async function fullIndex(deps: {
   // internal service factories
 
   function createProductIdQueue() {
+    type ProductId = ProductData['id'];
+
     const queueKey = 'PRODUCT_ID_QUEUE';
 
     const restoreQueue = async () => {
@@ -50,13 +49,13 @@ export async function fullIndex(deps: {
       return JSON.parse(queueValue ?? '[]');
     };
 
-    const persistQueue = async (items: ProductId[]) => {
-      if (!items.length) {
+    const persistQueue = async (productIds: ProductId[]) => {
+      if (!productIds.length) {
         await kv.delete(queueKey);
         return;
       }
 
-      const queueValue = JSON.stringify(items);
+      const queueValue = JSON.stringify(productIds);
       await kv.set(queueKey, queueValue);
     };
 
