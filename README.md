@@ -20,6 +20,8 @@ npm run fullIndex # updates all data for all products
 npm run priceIndex # updates price data for all products
 ```
 
+Bear in mind, a full index is required before partial indexes are possible.
+
 ## Architecture
 
 The target system looks like this:

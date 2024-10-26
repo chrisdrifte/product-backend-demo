@@ -8,8 +8,7 @@ const localKv: KvClient = {
     const dir = path.join(process.cwd(), '.kv', options.url);
 
     if (!fs.existsSync(dir)) {
-      console.log('creating', dir);
-      fs.mkdirSync(dir);
+      fs.mkdirSync(dir, { recursive: true });
     }
 
     const keyToFile = (key: string) => path.join(dir, key + '.txt');

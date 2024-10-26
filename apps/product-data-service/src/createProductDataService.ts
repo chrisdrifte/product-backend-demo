@@ -1,16 +1,11 @@
-import { BrokerClient, EventAction, KvClient } from '@product-backend/types';
+import { BrokerClient, EventAction, ProductData } from '@product-backend/types';
 
 import { isPartialProductData } from './isPartialProductData';
 import { mergeProductData } from './mergeProductData';
+import { readProductData } from './readProductData';
+import { writeProductData } from './writeProductData';
 
-export async function createProductDataService(deps: {
-  kv: KvClient;
-  broker: BrokerClient;
-}) {
-  const kv = await deps.kv.connect({
-    url: 'PDS',
-  });
-
+export async function createProductDataService(deps: { broker: BrokerClient }) {
   const broker = await deps.broker.connect({
     url: 'ws://localhost:8080',
   });
@@ -18,27 +13,33 @@ export async function createProductDataService(deps: {
   broker.subscribe(EventAction.Update, async (payload) => {
     console.info('[PDS] Update', payload.productData);
 
-    const productKey = `PRODUCT_${payload.productData.id}`;
+    const isPartial = isPartialProductData(payload.productData);
 
-    const storedProductData = await kv.get(productKey);
+    if (!isPartial) {
+      const fullProductData = payload.productData;
+      await updateAndEmit(fullProductData);
 
-    const existingProductData =
-      storedProductData && JSON.parse(storedProductData);
-
-    if (!existingProductData && isPartialProductData(payload.productData)) {
       return;
     }
 
-    const fullProductData = mergeProductData(
-      existingProductData,
-      payload.productData
-    );
+    const prevProductData = await readProductData(payload.productData.id);
 
-    await kv.set(productKey, JSON.stringify(fullProductData));
+    if (prevProductData) {
+      const fullProductData = mergeProductData(
+        prevProductData,
+        payload.productData
+      );
+
+      await updateAndEmit(fullProductData);
+    }
+  });
+
+  const updateAndEmit = async (productData: ProductData) => {
+    await writeProductData(productData);
 
     broker.emit({
       action: EventAction.Index,
-      productData: fullProductData,
+      productData: productData,
     });
-  });
+  };
 }
