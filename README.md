@@ -20,10 +20,9 @@ npm run services
 # triggers indexing for all indexes
 npm run fullIndex
 
-
 # updates description data for all products (at least one full index is required first)
 # will only trigger indexing for index a
-npm run priceIndex
+npm run descriptionIndex
 
 # updates price data for all products (at least one full index is required first)
 # will only trigger indexing for index b
