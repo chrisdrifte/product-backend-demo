@@ -11,8 +11,8 @@ import WebSocket from 'ws';
 type Data = any;
 
 const wsBroker: BrokerClient<Data> = {
-  async connect({ url, signal }) {
-    const ws = new WebSocket(url, { signal });
+  async connect({ url }) {
+    const ws = new WebSocket(url);
 
     ws.on('open', () => {
       console.info('Connected to broker');

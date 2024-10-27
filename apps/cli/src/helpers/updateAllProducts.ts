@@ -44,22 +44,14 @@ export async function updateAllProducts(
     broker: BrokerClient<UpdateEvent>;
   }
 ) {
-  // maximize our chances of atomic operations by aborting all actions if we
-  // encounter an error
-
-  const abortController = new AbortController();
-  const signal = abortController.signal;
-  const abort = abortController.abort.bind(abortController);
-
   // external services
 
-  const db = await deps.db.connect({ signal });
+  const db = await deps.db.connect();
 
-  const kv = await deps.kv.connect({ url: 'CLI', signal });
+  const kv = await deps.kv.connect({ url: 'CLI' });
 
   const broker = await deps.broker.connect({
     url: 'ws://localhost:8080',
-    signal,
   });
 
   // internal service factories
@@ -83,7 +75,6 @@ export async function updateAllProducts(
     return createQueue<ProductId>({
       restore: restoreQueue,
       persist: persistQueue,
-      abort,
     });
   }
 
