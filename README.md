@@ -16,11 +16,24 @@ npm run services
 ```
 
 ```shell
-npm run fullIndex # updates all data for all products
-npm run priceIndex # updates price data for all products
+# updates all data for all products
+npm run fullIndex
+
+# updates price data for all products (at least one full index is required first)
+npm run priceIndex
 ```
 
-Bear in mind, a full index is required before partial indexes are possible.
+When indexing is triggered, product ids are added to a queue with a unique id.
+The queue id can be provided manually in order to finish processing queues that
+did not complete fully due to errors.
+
+```shell
+# triggers a full index with all products
+QUEUE_ID=myQueue npm run fullIndex
+
+# triggers a partial index with just the products that had errors the first time
+QUEUE_ID=myQueue npm run fullIndex
+```
 
 ## Architecture
 
