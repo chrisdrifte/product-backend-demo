@@ -17,9 +17,16 @@ npm run services
 
 ```shell
 # updates all data for all products
+# triggers indexing for all indexes
 npm run fullIndex
 
+
+# updates description data for all products (at least one full index is required first)
+# will only trigger indexing for index a
+npm run priceIndex
+
 # updates price data for all products (at least one full index is required first)
+# will only trigger indexing for index b
 npm run priceIndex
 ```
 

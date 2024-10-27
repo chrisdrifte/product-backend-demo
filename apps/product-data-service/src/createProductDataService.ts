@@ -17,7 +17,7 @@ export async function createProductDataService(deps: { broker: BrokerClient }) {
 
     if (!isPartial) {
       const fullProductData = payload.productData;
-      await updateAndEmit(fullProductData);
+      await updateAndEmit(fullProductData, ['*']);
 
       return;
     }
@@ -30,16 +30,17 @@ export async function createProductDataService(deps: { broker: BrokerClient }) {
         payload.productData
       );
 
-      await updateAndEmit(fullProductData);
+      await updateAndEmit(fullProductData, payload.tags);
     }
   });
 
-  const updateAndEmit = async (productData: ProductData) => {
+  const updateAndEmit = async (productData: ProductData, tags: string[]) => {
     await writeProductData(productData);
 
     broker.emit({
       action: EventAction.Index,
       productData: productData,
+      tags,
     });
   };
 }

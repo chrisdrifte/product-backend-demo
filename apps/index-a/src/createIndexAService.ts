@@ -10,6 +10,12 @@ export async function createIndexAService(deps: { broker: BrokerClient }) {
   });
 
   broker.subscribe(EventAction.Index, (payload) => {
+    const acceptTags = ['*', 'name', 'description'];
+
+    if (!payload.tags.some((tag) => acceptTags.includes(tag))) {
+      return;
+    }
+
     updateIndexA(payload.productData);
   });
 }

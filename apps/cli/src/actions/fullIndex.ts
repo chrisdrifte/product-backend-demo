@@ -16,5 +16,6 @@ export async function fullIndex(
   await broker.emit({
     action: EventAction.Update,
     productData: fullProductData,
+    tags: ['*'],
   });
 }

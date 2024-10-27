@@ -4,18 +4,18 @@ import {
   EventAction,
 } from '@product-backend/types';
 
-import { getProductPriceById } from '../queries/getProductPriceById';
+import { getProductDescriptionById } from '../queries/getProductDescriptionById';
 
-export async function priceIndex(
+export async function descriptionIndex(
   db: DbClientConnection,
   broker: BrokerClientConnection,
   productId: number
 ) {
-  const partialProductData = await getProductPriceById(db, productId);
+  const partialProductData = await getProductDescriptionById(db, productId);
 
   await broker.emit({
     action: EventAction.Update,
     productData: partialProductData,
-    tags: ['price'],
+    tags: ['description'],
   });
 }
