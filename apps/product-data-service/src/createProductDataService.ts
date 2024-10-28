@@ -1,9 +1,9 @@
 import { BrokerClient, EventAction, ProductData } from '@product-backend/types';
 
-import { isPartialProductData } from './isPartialProductData';
-import { mergeProductData } from './mergeProductData';
-import { readProductData } from './readProductData';
-import { writeProductData } from './writeProductData';
+import { isPartialProductData } from './helpers/isPartialProductData';
+import { mergeProductData } from './helpers/mergeProductData';
+import { readProductData } from './helpers/readProductData';
+import { writeProductData } from './helpers/writeProductData';
 
 export async function createProductDataService(deps: { broker: BrokerClient }) {
   const broker = await deps.broker.connect({
