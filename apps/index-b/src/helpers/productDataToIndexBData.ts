@@ -1,4 +1,4 @@
-import { IndexBProductData } from './IndexBProductData';
+import { IndexBProductData } from '../types/IndexBProductData';
 import { ProductData } from '@product-backend/types';
 
 export function productDataToIndexBData(
