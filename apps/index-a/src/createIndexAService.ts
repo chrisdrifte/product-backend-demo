@@ -1,6 +1,6 @@
 import { BrokerClient, EventAction } from '@product-backend/types';
 
-import { updateIndexA } from '@product-backend/clients/indexA';
+import { updateIndexA } from './helpers/updateIndexA';
 
 const BROKER_URL = 'ws://localhost:8080';
 

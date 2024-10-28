@@ -80,10 +80,8 @@ distributed across different systems in the network.
 
 As this is a demo project, many clients are mocked.
 
-| Client   | Description                                         |
-| -------- | --------------------------------------------------- |
-| indexA   | Mocks communication with the external index service |
-| indexB   | Mocks communication with the external index service |
-| fsKv     | Mocks key value storage as files in `/.kv`          |
-| memDb    | Mocks relational database storage                   |
-| wsBroker | Mocks message broker as a websocket relay server    |
+| Client   | Description                                      |
+| -------- | ------------------------------------------------ |
+| fsKv     | Mocks key value storage as files in `/.kv`       |
+| memDb    | Mocks relational database storage                |
+| wsBroker | Mocks message broker as a websocket relay server |

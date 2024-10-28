@@ -1,3 +1,0 @@
-export * from './IndexBProductData';
-export * from './productDataToIndexBData';
-export * from './bulkUpdateIndexB';

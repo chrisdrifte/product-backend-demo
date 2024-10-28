@@ -1,6 +1,6 @@
 import { BrokerClient, EventAction, ProductData } from '@product-backend/types';
 
-import { bulkUpdateIndexB } from '@product-backend/clients/indexB';
+import { bulkUpdateIndexB } from './helpers/bulkUpdateIndexB';
 
 const BROKER_URL = 'ws://localhost:8080';
 
