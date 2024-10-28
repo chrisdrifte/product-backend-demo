@@ -1,6 +1,6 @@
-import { BrokerClient, EventAction } from '@product-backend/types';
+import { BrokerClient, EventAction, ProductData } from '@product-backend/types';
 
-import { updateIndexB } from '@product-backend/clients/indexB';
+import { bulkUpdateIndexB } from '@product-backend/clients/indexB';
 
 const BROKER_URL = 'ws://localhost:8080';
 
@@ -9,6 +9,14 @@ export async function createIndexBService(deps: { broker: BrokerClient }) {
     url: BROKER_URL,
   });
 
+  let bulkProductData: ProductData[] = [];
+  let throttleTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  function executeBulkUpdate() {
+    bulkUpdateIndexB(bulkProductData);
+    bulkProductData = [];
+  }
+
   broker.subscribe(EventAction.Index, (payload) => {
     const acceptTags = ['*', 'name', 'price'];
 
@@ -16,6 +24,15 @@ export async function createIndexBService(deps: { broker: BrokerClient }) {
       return;
     }
 
-    updateIndexB(payload.productData);
+    const productData = payload.productData as ProductData;
+    bulkProductData.push(productData);
+
+    if (bulkProductData.length >= 2) {
+      executeBulkUpdate();
+      return;
+    }
+
+    clearTimeout(throttleTimeout);
+    throttleTimeout = setTimeout(executeBulkUpdate, 10 * 1000);
   });
 }
